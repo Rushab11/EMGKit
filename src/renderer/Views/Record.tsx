@@ -1,6 +1,7 @@
 import { Ref, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useInterval } from '../../../utils/CustomHooks/useInterval';
 import './statics/record.css';
+import CoRe from './components/CoRe';
 import {
   Chart as ChartJS,
   LinearScale,
@@ -18,6 +19,8 @@ import CustomBackButton from './components/CustomBackButton';
 import { ForwardedRef } from 'react-chartjs-2/dist/types';
 import { ipcRenderer } from 'electron';
 import { Synth } from 'tone';
+import { usePolling } from './components/usePolling';
+import { electron } from 'process';
 
 ChartJS.register(
   LinearScale,
@@ -73,9 +76,17 @@ export const options = {
 };
 function Record() {
   const [filePath, setFilePath] = useState<string[] | string>('');
-  // const [csvData, setCsvData] = useState<csvData[]>([]);
-  // const [stopFlag, setStopFlag] = useState<boolean>(true);
+
+  const [isArduinoConnected, setIsArduinoConnected] = useState<boolean>(false);
+
+  usePolling(async () => {
+    let arduinoStatus = await window.arduino.getStatus();
+
+    setIsArduinoConnected(arduinoStatus);
+  }, 1000);
+
   const chartRef = useRef<ChartJS | null>(null);
+
   const [plotList, setPlotList] = useState<plotList>({
     labels: [],
     datasets: [
@@ -180,6 +191,9 @@ function Record() {
   }, []);
   return (
     <div className="record-root">
+      <CoRe condition={isArduinoConnected}>
+        <h1>Arduino Is Connected!</h1>
+      </CoRe>
       <div className="record-controls">
         <div className="record-back-button">
           <Link to="/">

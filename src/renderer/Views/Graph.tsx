@@ -81,10 +81,7 @@ function Graph() {
   // const
 
   const handleOpenFile = async () => {
-    const fileData: string[][] = await window.electron.openFile(
-      'dialog:openFile',
-      () => [[]]
-    );
+    const fileData: string[][] = await window.dialog.openFile();
     if (fileData) {
       setFilePath(fileData[0]);
       const tempList: plotList = {
@@ -111,9 +108,7 @@ function Graph() {
     }
   };
 
-  const handleFilterSwitch = (condition: boolean) => {
-    window.electron.onFilter(condition);
-  };
+  const handleFilterSwitch = (condition: boolean) => {};
 
   return (
     <div className="graph-root">
