@@ -1,9 +1,10 @@
-import { ElectronHandler } from 'main/preload';
+import { DialogHandler, ArduinoHandler } from 'main/preload';
 
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
-    electron: ElectronHandler;
+    dialog: DialogHandler;
+    arduino: ArduinoHandler;
   }
 }
 

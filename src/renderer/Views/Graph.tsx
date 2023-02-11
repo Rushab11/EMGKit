@@ -81,37 +81,34 @@ function Graph() {
   // const
 
   const handleOpenFile = async () => {
-    const fileData: string[][] = await window.electron.openFile(
-      'dialog:openFile',
-      () => [[]]
-    );
-    setFilePath(fileData[0]);
-    const tempList: plotList = {
-      labels: [''],
-      datasets: [
-        {
-          label: 'current',
-          data: [],
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-      ],
-    };
-    let plottingData: string[] = fileData[1];
-    // let tempDate = new Date(0);
-    // let startTime = plottingData[0][0];
-    for (let i = 0; i < plottingData.length; i++) {
+    const fileData: string[][] = await window.dialog.openFile();
+    if (fileData) {
+      setFilePath(fileData[0]);
+      const tempList: plotList = {
+        labels: [''],
+        datasets: [
+          {
+            label: 'current',
+            data: [],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          },
+        ],
+      };
+      let plottingData: string[] = fileData[1];
       // let tempDate = new Date(0);
-      // tempDate.setUTCMilliseconds(plottingData[i][0]);
-      tempList.labels.push(plottingData[i][0]);
-      tempList.datasets[0].data.push(parseInt(plottingData[i][1]));
+      // let startTime = plottingData[0][0];
+      for (let i = 0; i < plottingData.length; i++) {
+        // let tempDate = new Date(0);
+        // tempDate.setUTCMilliseconds(plottingData[i][0]);
+        tempList.labels.push(plottingData[i][0]);
+        tempList.datasets[0].data.push(parseInt(plottingData[i][1]));
+      }
+      setPlotList(tempList);
     }
-    setPlotList(tempList);
   };
 
-  const handleFilterSwitch = (condition: boolean) => {
-    window.electron.onFilter(condition);
-  };
+  const handleFilterSwitch = (condition: boolean) => {};
 
   return (
     <div className="graph-root">
