@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import CustomBackButton from './components/CustomBackButton';
 import { ForwardedRef } from 'react-chartjs-2/dist/types';
 import { ipcRenderer } from 'electron';
+import { Synth } from 'tone';
 
 ChartJS.register(
   LinearScale,
@@ -90,11 +91,21 @@ function Record() {
   const [fileNameError, setFileNameError] = useState<string>('');
   const [stopFlag, setStopFlag] = useState<boolean>(true);
 
+  let prev = 0;
+  const synth = new Synth().toDestination();
   const handleChange = (chartRef: any) => {
     if (!stopFlag) {
       let currentDate = Date.now();
       let mathRandomInt = Math.random();
-
+      console.log(prev, mathRandomInt);
+      if (prev < mathRandomInt) {
+        console.log('higher');
+        synth.triggerAttackRelease('C4', '8n');
+      } else {
+        console.log('lower');
+        synth.triggerAttackRelease('E4', '8n');
+      }
+      prev = mathRandomInt;
       //async data here
       chartRef.data.labels.push(currentDate);
       chartRef.data.datasets[0].data.push(mathRandomInt);
@@ -116,7 +127,7 @@ function Record() {
 
   useInterval(() => {
     handleChange(chartRef.current);
-  }, 2000);
+  }, 100);
 
   useEffect(() => {
     return () => {};
