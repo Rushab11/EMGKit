@@ -92,25 +92,71 @@ function Record() {
   const [stopFlag, setStopFlag] = useState<boolean>(true);
 
   let prev = 0;
+  let dir = false;
+  let noteList = [
+    'D4',
+    'E4',
+    'G4',
+    'E4',
+    'B4',
+    'B4',
+    'B4',
+    'A4',
+    'A4',
+    'D4',
+    'E4',
+    'G4',
+    'E4',
+    'A4',
+    'A4',
+    'A4',
+    'G4',
+    'G4',
+    'D4',
+    'E4',
+    'G4',
+    'E4',
+    'G4',
+    'G4',
+    'A4',
+    'F#4',
+  ];
+  let index = 0;
+  let meme = true;
   const synth = new Synth().toDestination();
+  function sleep(ms: any) {
+    return new Promise((val) => setTimeout(val, ms));
+  }
   const handleChange = (chartRef: any) => {
     if (!stopFlag) {
       let currentDate = Date.now();
       let mathRandomInt = Math.random();
-      console.log(prev, mathRandomInt);
-      if (prev < mathRandomInt) {
-        console.log('higher');
-        synth.triggerAttackRelease('C4', '8n');
+      if (meme) {
+        if (index != 5 && index != 8 && index != 17 && index != 22) {
+          if (index < noteList.length) {
+            synth.triggerAttackRelease(noteList[index], '8n');
+            index++;
+          }
+        } else {
+          sleep(200);
+          index++;
+        }
       } else {
-        console.log('lower');
-        synth.triggerAttackRelease('E4', '8n');
+        if (prev < mathRandomInt && !dir) {
+          dir = true;
+          synth.triggerAttackRelease('D4', '8n');
+        } else if (prev > mathRandomInt && dir) {
+          dir = false;
+          synth.triggerAttackRelease('E4', '8n');
+        }
+        prev = mathRandomInt;
+        // async data here
+        chartRef.data.labels.push(currentDate);
+        chartRef.data.datasets[0].data.push(mathRandomInt);
+        // console.log([...csvData, [currentDate, mathRandomInt]]);
+        // setCsvData(csvData.push({ data: currentDate, value: mathRandomInt }));
       }
-      prev = mathRandomInt;
-      //async data here
-      chartRef.data.labels.push(currentDate);
-      chartRef.data.datasets[0].data.push(mathRandomInt);
-      // console.log([...csvData, [currentDate, mathRandomInt]]);
-      // setCsvData(csvData.push({ data: currentDate, value: mathRandomInt }));
+
       chartRef.update();
     }
   };
@@ -127,7 +173,7 @@ function Record() {
 
   useInterval(() => {
     handleChange(chartRef.current);
-  }, 100);
+  }, 200);
 
   useEffect(() => {
     return () => {};
