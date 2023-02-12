@@ -1,10 +1,10 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import path from 'path';
 
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 import { IPCEvents } from './IPCs';
+import path from 'path';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -24,21 +24,6 @@ if (isDebug) {
 IPCEvents.forEach((ipc) => {
   ipcMain.handle(ipc.event, ipc.handler);
 });
-
-ipcMain.handle('sendSaveData', (event, csvData) => {
-  let data: number[][] = [];
-  for (let i = 0; i < csvData[0].length; i++) {
-    data.push([csvData[0][i], csvData[1][i]]);
-  }
-  const stringify = require('csv-stringify');
-  stringify.stringify(data, (err: any, output: any) => {
-    fs.writeFileSync(
-      path.join(__dirname + '../../../assets/data/' + csvData[2] + '.csv'),
-      output
-    );
-  });
-});
-// console.log('nooooooooo');
 
 const createWindow = async () => {
   const RESOURCES_PATH = app.isPackaged

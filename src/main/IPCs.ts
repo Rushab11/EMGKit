@@ -1,7 +1,7 @@
 import { IpcMainInvokeEvent } from 'electron';
 
 import { arduinoStateCheck } from './IPCHandlers/arduino';
-import { handleFileOpen } from './IPCHandlers/file';
+import { handleFileOpen, handleFileSave } from './IPCHandlers/file';
 
 interface IPC {
   event: string;
@@ -13,6 +13,10 @@ const IPCs = {
     open: {
       event: 'dialog:openFile',
       handler: handleFileOpen,
+    },
+    save: {
+      event: 'dialog:saveFile',
+      handler: handleFileSave,
     },
   },
   arduino: {
