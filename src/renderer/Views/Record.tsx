@@ -133,7 +133,7 @@ function Record() {
     'F#4',
   ];
   let index = 0;
-  let meme = true;
+  let meme = false;
   const synth = new Synth().toDestination();
   function sleep(ms: any) {
     return new Promise((val) => setTimeout(val, ms));
@@ -153,6 +153,7 @@ function Record() {
           index++;
         }
       } else {
+        100;
         if (prev < mathRandomInt && !dir) {
           dir = true;
           synth.triggerAttackRelease('D4', '8n');
@@ -233,7 +234,7 @@ function Record() {
           <button
             onClick={() => {
               if (fileName != '') {
-                window.electron.sendSaveData([
+                window.dialog.saveFile([
                   chartRef.current?.data.labels,
                   chartRef.current?.data.datasets[0].data,
                   fileName,
