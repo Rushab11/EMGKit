@@ -101,6 +101,9 @@ function Record() {
   const [fileName, setFileName] = useState<string>('');
   const [fileNameError, setFileNameError] = useState<string>('');
   const [stopFlag, setStopFlag] = useState<boolean>(true);
+  const [calibrate, setCalibrate] = useState<boolean>(false);
+  const [inp, setInp] = useState<number | null>();
+  const [onEntered, setOnEntered] = useState<number | null>();
 
   let prev = 0;
   let dir = false;
@@ -134,6 +137,7 @@ function Record() {
   ];
   let index = 0;
   let meme = false;
+  let data: number[] = [];
   const synth = new Synth().toDestination();
   function sleep(ms: any) {
     return new Promise((val) => setTimeout(val, ms));
@@ -142,6 +146,7 @@ function Record() {
     if (!stopFlag) {
       let currentDate = Date.now();
       let mathRandomInt = Math.random();
+      data.push(mathRandomInt);
       if (meme) {
         if (index != 5 && index != 8 && index != 17 && index != 22) {
           if (index < noteList.length) {
@@ -153,7 +158,7 @@ function Record() {
           index++;
         }
       } else {
-        100;
+        sleep(100);
         if (prev < mathRandomInt && !dir) {
           dir = true;
           synth.triggerAttackRelease('D4', '8n');
@@ -181,15 +186,43 @@ function Record() {
     setFileName(e.value);
   };
 
-  const arrayBuffer: csvData[] = [];
+  const handleCalibrationInput = (e: any) => {
+    if (e.target.value) {
+      setInp(e.target.value);
+    } else {
+      setInp(0);
+    }
+  };
+
+  const handleCalibrate = () => {
+    if (calibrate) {
+      setStopFlag(false);
+      let calibrationTime: number = onEntered ? onEntered * 1000 : 0;
+      setTimeout(() => {
+        setStopFlag(true);
+        setCalibrate(false);
+      }, calibrationTime);
+      if (data && data.length) {
+        // insert logic here
+        // let totalVal: number = data.reduce((a, b) => a + b);
+        // let avgVal: number = totalVal / data.length;
+        // console.log(avgVal);
+      }
+    }
+  };
+  //
+  useInterval(() => {
+    handleCalibrate();
+  }, 100);
 
   useInterval(() => {
     handleChange(chartRef.current);
   }, 200);
 
   useEffect(() => {
-    return () => {};
-  }, []);
+    setOnEntered(inp);
+  }, [inp]);
+
   return (
     <div className="record-root">
       <CoRe condition={isArduinoConnected}>
@@ -202,6 +235,29 @@ function Record() {
           </Link>
         </div>
         <div className="record-title">The Graph is Listening for Input</div>
+        <div className="calibrate-btn">
+          <button
+            type="button"
+            className="calibrate-button"
+            onClick={() => setCalibrate(true)}
+          >
+            Calibrate
+          </button>
+          <div>
+            <input
+              type="number"
+              name="Calibrate"
+              placeholder="Enter time"
+              value={inp ? inp : ''}
+              onChange={handleCalibrationInput}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setOnEntered(inp);
+                }
+              }}
+            />
+          </div>
+        </div>
         <div className="record-controls-options">
           <div className="record-textbox-area">
             <input

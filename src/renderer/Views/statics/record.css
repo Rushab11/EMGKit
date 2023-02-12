@@ -97,3 +97,13 @@
   color: #ffffff;
   border: none;
 }
+
+.calibrate-button {
+  padding: 10px 30px 10px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #e70049;
+  border-radius: 8px;
+  color: #ffffff;
+  border: none;
+}
