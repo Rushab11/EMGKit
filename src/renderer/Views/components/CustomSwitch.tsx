@@ -1,11 +1,16 @@
 import './statics/switch.css';
 
 type Props = {
+  initialState: boolean;
   switchLabel: string;
   onFunc: Function;
 };
 
-export default function CustomSwitch({ switchLabel, onFunc }: Props) {
+export default function CustomSwitch({
+  initialState,
+  switchLabel,
+  onFunc,
+}: Props) {
   return (
     <div>
       <label htmlFor="animate" className="switch-label">
@@ -14,8 +19,10 @@ export default function CustomSwitch({ switchLabel, onFunc }: Props) {
       <label className="switch">
         <input
           onChange={(e) => {
+            console.log('i got called');
             e.target.checked ? onFunc(true) : onFunc(false);
           }}
+          defaultChecked={initialState}
           type="checkbox"
           id="animate"
         />

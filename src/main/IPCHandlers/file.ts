@@ -16,7 +16,7 @@ export async function handleFileOpen() {
     let finalData: string[][] = [[]];
     finalData = data;
 
-    return [filePaths[0], finalData];
+    return [[filePaths[0]], finalData];
   }
 }
 

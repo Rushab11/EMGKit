@@ -61,6 +61,13 @@
   font-size: 0.9em;
   bottom: -1.4em;
 }
+.record-input-success {
+  color: #347d39;
+  margin-left: 10px;
+  position: absolute;
+  font-size: 0.9em;
+  bottom: -1.4em;
+}
 .record-media-button {
   padding: 10px 15px 10px 15px;
   border-radius: 8px;
